@@ -32,12 +32,13 @@ public class Needs {
     @GetMapping()
     public ArrayList<OrderNeeds> getOrderNeeds(@RequestBody CalcNeedsBody requestBody) {
 
+        ArrayList<OrderNeeds> arrayList = new ArrayList<OrderNeeds>();
         try {
-            return DatabaseConnection.displayOrderNeeds(requestBody.getOrderId());
+            arrayList = DatabaseConnection.displayOrderNeeds(requestBody.getOrderId());
+            return arrayList;
         } catch (Exception e) {
-            return 'error'
+            return arrayList;
         }
-
 
     }
 
@@ -47,9 +48,9 @@ public class Needs {
         // here
 
         try {
-        DatabaseConnection.calculateOrderNeeds(requestBody.getOrderId());
+            DatabaseConnection.calculateOrderNeeds(requestBody.getOrderId());
 
-        return "Order with id " + requestBody.getOrderId() + " has been updated";
+            return "Order with id " + requestBody.getOrderId() + " has been updated";
         } catch (Exception e) {
             return "Order with id " + requestBody.getOrderId() + " does not exist";
         }

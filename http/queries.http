@@ -16,7 +16,7 @@ PATCH http://localhost:8080/api/needs
 content-type: application/json
 
 {
-    "orderId": "6DD3DBBF-836E-418B-9AE6-25C4A899D833"
+    "orderId": "A505AD85-3C3C-4951-BD03-8FAFF4A6DA02"
 }
 
 ---
@@ -25,7 +25,7 @@ GET http://localhost:8080/api/needs
 content-type: application/json
 
 {
-    "orderId": "6DD3DBBF-836E-418B-9AE6-25C4A899D833"
+    "orderId": "A505AD85-3C3C-4951-BD03-8FAFF4A6DA02"
 }
 
 ---
