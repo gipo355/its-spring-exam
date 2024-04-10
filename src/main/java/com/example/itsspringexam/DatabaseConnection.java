@@ -119,8 +119,12 @@ public class DatabaseConnection {
             }
         } catch (SQLException se) {
             LOGGER.severe(se.getMessage());
+
+            throw new RuntimeException(se);
         } catch (Exception e) {
             LOGGER.severe(e.getMessage());
+
+            throw new RuntimeException(e);
         }
 
         return orderId;
@@ -156,10 +160,12 @@ public class DatabaseConnection {
             return arrayList;
         } catch (SQLException se) {
             se.printStackTrace();
-            return arrayList;
+
+            throw new RuntimeException(se);
         } catch (Exception e) {
             e.printStackTrace();
-            return arrayList;
+
+            throw new RuntimeException(e);
         } finally {
             try {
                 if (rs != null)
@@ -256,8 +262,12 @@ public class DatabaseConnection {
 
         } catch (SQLException se) {
             se.printStackTrace();
+
+            throw new RuntimeException(se);
         } catch (Exception e) {
             e.printStackTrace();
+
+            throw new RuntimeException(e);
         } finally {
             try {
                 if (pstmt != null)
@@ -370,7 +380,7 @@ public class DatabaseConnection {
             if (rs.next() && rs.getBoolean("Produced")) {
                 System.out.println("The order has already been processed.");
 
-                return;
+                throw new RuntimeException("The order has already been processed.");
             }
 
             // steps for the query
@@ -414,8 +424,10 @@ public class DatabaseConnection {
 
         } catch (SQLException se) {
             se.printStackTrace();
+            throw new RuntimeException(se);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             try {
                 if (rs != null)

@@ -56,29 +56,35 @@ public class Orders {
     @PostMapping()
     public String insertProduct(@RequestBody PostBody requestBody) {
 
-        // System.out.println("Inserting new order...");
-        // System.out.println("Request body: " + requestBody);
-        // System.out.println("Article ID: " + articleId);
+        try {
 
-        UUID orderId = null;
+            // System.out.println("Inserting new order...");
+            // System.out.println("Request body: " + requestBody);
+            // System.out.println("Article ID: " + articleId);
 
-        int quantity = requestBody.getQuantity();
-        UUID articleId = requestBody.getArticleId();
+            UUID orderId = null;
 
-        System.out.println("Article ID: " + articleId);
+            int quantity = requestBody.getQuantity();
+            UUID articleId = requestBody.getArticleId();
 
-        // UUID articleUUID = UUID.fromString(articleId);
+            System.out.println("Article ID: " + articleId);
 
-        // OrderDetails newOrder = new OrderDetails(articleUUID, quantity);
-        OrderDetails newOrder = new OrderDetails(articleId, quantity);
+            // UUID articleUUID = UUID.fromString(articleId);
 
-        orderId = DatabaseConnection.insertNewOrder(newOrder);
+            // OrderDetails newOrder = new OrderDetails(articleUUID, quantity);
+            OrderDetails newOrder = new OrderDetails(articleId, quantity);
 
-        System.out.println("New order inserted successfully.");
+            orderId = DatabaseConnection.insertNewOrder(newOrder);
 
-        System.out.println("OrderID: " + orderId);
-        // Your logic to insert a new product with the given id and quantity goes here
-        return "Product with id " + articleId + " and quantity " + quantity + " has been inserted";
+            System.out.println("New order inserted successfully.");
+
+            System.out.println("OrderID: " + orderId);
+            // Your logic to insert a new product with the given id and quantity goes here
+            return "Product with id " + articleId + " and quantity " + quantity + " has been inserted";
+
+        } catch (Exception e) {
+            return "Error inserting product";
+        }
 
     }
 

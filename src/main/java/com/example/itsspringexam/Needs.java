@@ -32,7 +32,12 @@ public class Needs {
     @GetMapping()
     public ArrayList<OrderNeeds> getOrderNeeds(@RequestBody CalcNeedsBody requestBody) {
 
-        return DatabaseConnection.displayOrderNeeds(requestBody.getOrderId());
+        try {
+            return DatabaseConnection.displayOrderNeeds(requestBody.getOrderId());
+        } catch (Exception e) {
+            return 'error'
+        }
+
 
     }
 
@@ -41,9 +46,14 @@ public class Needs {
         // Your logic to update the order with the given orderId and requestBody goes
         // here
 
+        try {
         DatabaseConnection.calculateOrderNeeds(requestBody.getOrderId());
 
         return "Order with id " + requestBody.getOrderId() + " has been updated";
+        } catch (Exception e) {
+            return "Order with id " + requestBody.getOrderId() + " does not exist";
+        }
+
     }
 
 }
