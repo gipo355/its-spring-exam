@@ -1,6 +1,5 @@
 package com.example.itsspringexam;
 
-import org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties.System;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +45,7 @@ public class Needs {
     public double getOrderCost(@RequestBody CalcNeedsBody requestBody) {
         ArrayList<OrderNeeds> arrayList = new ArrayList<OrderNeeds>();
         UUID orderId = requestBody.getOrderId();
+        System.out.println(orderId);
         try {
             // display needs for an order
             //
@@ -64,19 +64,27 @@ public class Needs {
             for (OrderNeeds orderNeeds : arrayList) {
                 UUID articleId = orderNeeds.getArticleId();
 
+                System.out.println(articleId);
+
                 double articleQ = orderNeeds.getQuantityNeeded();
+
+                System.out.println(articleQ);
 
                 double articleTCost = 0.0;
 
                 for (Article article : articlelist) {
                     if (article.getId().equals(articleId)) {
-                        // totalCost += article. * orderNeeds.getQuantityNeeded();
                         double articleUnitaryCost = article.getCost();
+
+                        System.out.printf("article unitary cost %.2f", articleUnitaryCost);
                         articleTCost += articleUnitaryCost * articleQ;
+
+                        System.out.printf("article t cost %.2f", articleTCost);
                     }
                 }
 
                 totalUnitaryOrderCost += articleTCost;
+                System.out.println(totalUnitaryOrderCost);
             }
 
             Order order = DatabaseConnection.getOrder(orderId);

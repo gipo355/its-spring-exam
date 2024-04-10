@@ -38,12 +38,12 @@ class Article {
     private int quantity;
     private double cost;
 
-    public Article(UUID id, String name, int quantity, String type) {
+    public Article(UUID id, String name, int quantity, String type, double cost) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.type = type;
-        this.cost = 0;
+        this.cost = cost;
     }
 
     public UUID getId() {
@@ -206,7 +206,8 @@ public class DatabaseConnection {
                 UUID articleId = UUID.fromString(rs.getString("Id"));
                 String articleName = rs.getString("Name");
                 int quantity = rs.getInt("Quantity");
-                Article article = new Article(articleId, articleName, quantity, rs.getString("Type"));
+                double cost = rs.getDouble("Cost");
+                Article article = new Article(articleId, articleName, quantity, rs.getString("Type"), cost);
 
                 arrayList.add(article);
             }
