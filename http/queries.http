@@ -1,0 +1,12 @@
+GET http://localhost:8080/api/products
+
+---
+
+POST http://localhost:8080/api/orders/6DD3DBBF-836E-418B-9AE6-25C4A899D833
+Content-type: application/json
+
+{
+    "quantity": 10,
+}
+
+---
