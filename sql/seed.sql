@@ -23,12 +23,13 @@ IF OBJECT_ID(N'Articles', N'U') IS NULL
         (
 
             Id       uniqueidentifier primary key default newid(),
-            Name     VARCHAR(255) not null,
+            Name     VARCHAR(255)     not null,
 --         Type should be either finishedProduct or semiLavorato, create enum
 --             Type     VARCHAR(255) not null,
-            Type     VARCHAR(255) not null,
+            Type     VARCHAR(255)     not null,
             constraint chk_type check (Type in ('finishedProduct', 'semiLavorato')),
-            Quantity INT          not null, -- meters
+            Quantity INT              not null, -- meters
+            Cost     DOUBLE PRECISION not null
         )
 
     END
@@ -36,16 +37,16 @@ go
 
 -- seed
 
-INSERT INTO Articles (Name, Type, Quantity)
-VALUES ('Auto A', 'finishedProduct', 4),
-       ('Auto B', 'finishedProduct', 5),
-       ('Wheels', 'semiLavorato', 100),
-       ('Axes', 'semiLavorato', 100),
-       ('Telaio A', 'semiLavorato', 100),
-       ('Telaio B', 'semiLavorato', 100),
-       ('Carrozz A', 'semiLavorato', 100),
-       ('Carrozz B', 'semiLavorato', 100),
-       ('Viti', 'semiLavorato', 100)
+INSERT INTO Articles (Name, Type, Quantity, Cost)
+VALUES ('Auto A', 'finishedProduct', 4, 0),
+       ('Auto B', 'finishedProduct', 5, 0),
+       ('Wheels', 'semiLavorato', 100, 0.05),
+       ('Axes', 'semiLavorato', 100, 0.05),
+       ('Telaio A', 'semiLavorato', 100, 0.1),
+       ('Telaio B', 'semiLavorato', 100, 0.2),
+       ('Carrozz A', 'semiLavorato', 100, 0.3),
+       ('Carrozz B', 'semiLavorato', 100, 0.4),
+       ('Viti', 'semiLavorato', 100, 0.03)
 go
 
 IF OBJECT_ID(N'Links', N'U') IS NULL
@@ -127,7 +128,8 @@ IF OBJECT_ID(N'Orders', N'U') IS NULL
             Id                  uniqueidentifier primary key default newid(),
             Article_id          uniqueidentifier not null references Articles (Id),
             Quantity_to_produce INT              not null,
-            Produced            BIT              not null
+            Produced            BIT              not null,
+            TotalCost           DOUBLE PRECISION
         )
 
     END

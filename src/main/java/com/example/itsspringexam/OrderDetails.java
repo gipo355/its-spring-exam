@@ -6,6 +6,7 @@ public class OrderDetails {
     private final UUID articleId;
     private final int quantityToProduce;
     private final boolean produced;
+    private int totalCost;
     private UUID id;
 
     public OrderDetails(UUID articleId, int quantityToProduce) {
@@ -26,5 +27,9 @@ public class OrderDetails {
 
     public boolean isProduced() {
         return produced;
+    }
+
+    public int getTotalCost() {
+        return totalCost;
     }
 }

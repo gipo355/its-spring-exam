@@ -1,5 +1,6 @@
 package com.example.itsspringexam;
 
+import org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties.System;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +40,61 @@ public class Needs {
         } catch (Exception e) {
             return arrayList;
         }
+    }
 
+    @GetMapping("/cost")
+    public double getOrderCost(@RequestBody CalcNeedsBody requestBody) {
+        ArrayList<OrderNeeds> arrayList = new ArrayList<OrderNeeds>();
+        UUID orderId = requestBody.getOrderId();
+        try {
+            // display needs for an order
+            //
+            // get the article cost from thearticle did, using hte id from the needs
+            //
+            // art cost * artq from the needs per il singolo, * q dell' ordine per costo
+            // ordine
+            //
+            // update order db col totcost
+
+            // Having ArrayList<OrderNeeds> calc the total cost of the order
+            arrayList = DatabaseConnection.displayOrderNeeds(orderId);
+            ArrayList<Article> articlelist = DatabaseConnection.displayArticles();
+
+            double totalUnitaryOrderCost = 0;
+            for (OrderNeeds orderNeeds : arrayList) {
+                UUID articleId = orderNeeds.getArticleId();
+
+                double articleQ = orderNeeds.getQuantityNeeded();
+
+                double articleTCost = 0.0;
+
+                for (Article article : articlelist) {
+                    if (article.getId().equals(articleId)) {
+                        // totalCost += article. * orderNeeds.getQuantityNeeded();
+                        double articleUnitaryCost = article.getCost();
+                        articleTCost += articleUnitaryCost * articleQ;
+                    }
+                }
+
+                totalUnitaryOrderCost += articleTCost;
+            }
+
+            Order order = DatabaseConnection.getOrder(orderId);
+
+            int orderQuantity = order.getQuantityToProduce();
+
+            double totalOrderCost = totalUnitaryOrderCost * orderQuantity;
+
+            // get the order, multiply the totalOrderUnCost * orderq
+
+            DatabaseConnection.updateOrderTotalCost(orderId, totalOrderCost);
+
+            return totalOrderCost;
+
+        } catch (Exception e) {
+
+            throw e;
+        }
     }
 
     @PatchMapping()

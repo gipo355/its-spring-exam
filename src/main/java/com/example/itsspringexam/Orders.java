@@ -14,7 +14,47 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 import java.util.UUID;
 
+class Order {
+    private UUID id;
+    private UUID articleId;
+    private int quantityToProduce;
+    private boolean produced;
+    private double totalCost;
+
+    public Order(UUID id, UUID articleId, int quantityToProduce, boolean produced, double totalCost) {
+        this.id = id;
+        this.articleId = articleId;
+        this.quantityToProduce = quantityToProduce;
+        this.produced = produced;
+        this.totalCost = totalCost;
+    }
+
+    public UUID getId() {
+        return id;
+
+    }
+
+    public UUID getArticleId() {
+        return articleId;
+    }
+
+    public int getQuantityToProduce() {
+        return quantityToProduce;
+    }
+
+    public boolean isProduced() {
+        return produced;
+
+    }
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+
+}
+
 class PostBody {
+
     private UUID articleId;
     private int quantity;
 

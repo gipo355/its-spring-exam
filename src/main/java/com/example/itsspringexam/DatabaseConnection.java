@@ -36,12 +36,14 @@ class Article {
     private String name;
     private String type;
     private int quantity;
+    private double cost;
 
     public Article(UUID id, String name, int quantity, String type) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.type = type;
+        this.cost = 0;
     }
 
     public UUID getId() {
@@ -58,6 +60,10 @@ class Article {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public double getCost() {
+        return cost;
     }
 
 }
@@ -86,6 +92,54 @@ public class DatabaseConnection {
             try {
                 if (conn != null)
                     conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+    }
+
+    public static Order getOrder(UUID orderId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Order order = null;
+        try {
+            // Register JDBC driver
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            // Open a connection
+            System.out.println("Connecting to database...");
+            conn = DriverManager.getConnection(DB_URL);
+            // Execute a query to fetch the order by its id
+            String sql = "SELECT * FROM Orders WHERE Id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, orderId.toString());
+            rs = pstmt.executeQuery();
+            // Check if the order exists
+            if (rs.next()) {
+
+                order = new Order(UUID.fromString(rs.getString("Id")), UUID.fromString(rs.getString("Article_id")),
+                        rs.getInt("Quantity_to_produce"), rs.getBoolean("Produced"), rs.getDouble("TotalCost"));
+
+            }
+
+            return order;
+        } catch (SQLException se) {
+            se.printStackTrace();
+            throw new RuntimeException(se);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
             } catch (SQLException se) {
                 se.printStackTrace();
             }
@@ -440,5 +494,34 @@ public class DatabaseConnection {
                 se.printStackTrace();
             }
         }
+
     }
+
+    public static double updateOrderTotalCost(UUID orderId, double totalCost) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            // Register JDBC driver
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            // Open a connection
+            System.out.println("Connecting to database...");
+            conn = DriverManager.getConnection(DB_URL);
+            // Update the totalCost field of the order
+            String updateSql = "UPDATE Orders SET TotalCost = ? WHERE Id = ?";
+            pstmt = conn.prepareStatement(updateSql);
+            pstmt.setDouble(1, totalCost);
+            pstmt.setString(2, orderId.toString());
+            pstmt.executeUpdate();
+            System.out.println("Total cost of the order has been updated successfully!");
+
+            return totalCost;
+        } catch (SQLException se) {
+            se.printStackTrace();
+            throw new RuntimeException(se);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
 }
