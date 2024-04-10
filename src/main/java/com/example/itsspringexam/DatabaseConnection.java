@@ -1,8 +1,40 @@
 package com.example.itsspringexam;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.logging.Logger;
+
+class Article {
+    private UUID id;
+    private String name;
+    private String type;
+    private int quantity;
+
+    public Article(UUID id, String name, int quantity, String type) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.type = type;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+}
 
 public class DatabaseConnection {
     private static final Logger LOGGER = Logger.getLogger(DatabaseConnection.class.getName());
@@ -66,6 +98,54 @@ public class DatabaseConnection {
         }
 
         return orderId;
+    }
+
+    public static ArrayList<Article> displayArticles() {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        ArrayList<Article> arrayList = new ArrayList<Article>();
+        try {
+            // Register JDBC driver
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            // Open a connection
+            System.out.println("Connecting to database...");
+            conn = DriverManager.getConnection(DB_URL);
+            // Execute a query to fetch all articles
+            String sql = "SELECT * FROM Articles";
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            // Display the articles
+
+            while (rs.next()) {
+                UUID articleId = UUID.fromString(rs.getString("Id"));
+                String articleName = rs.getString("Name");
+                int quantity = rs.getInt("Quantity");
+                Article article = new Article(articleId, articleName, quantity, rs.getString("Type"));
+
+                arrayList.add(article);
+            }
+
+            return arrayList;
+        } catch (SQLException se) {
+            se.printStackTrace();
+            return arrayList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return arrayList;
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (pstmt != null)
+                    pstmt.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
     }
 
     public static void calculateOrderNeeds(UUID orderId) {

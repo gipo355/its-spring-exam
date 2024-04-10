@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -14,9 +16,10 @@ import java.util.UUID;
 public class Products {
 
     @GetMapping
-    public String getAllProducts() {
-        // Your logic to retrieve all products goes here
-        return "This is the list of all products";
+    public ArrayList<Article> getAllProducts() {
+        ArrayList<Article> arrayList = DatabaseConnection.displayArticles();
+
+        return arrayList;
     }
 
 }

@@ -1,15 +1,39 @@
 package com.example.itsspringexam;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 // import org.springframework.web.bind.annotation.RequestParam;
-// import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 import java.util.UUID;
+
+class PostBody {
+    private UUID articleId;
+    private int quantity;
+
+    public UUID getArticleId() {
+        return articleId;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+}
+
+class CalcNeedsBody {
+    private UUID orderId;
+
+    public UUID getOrderId() {
+        return orderId;
+    }
+}
 
 @RestController
 @RequestMapping("/api/orders")
@@ -21,19 +45,31 @@ public class Orders {
         return "This is the list of all orders";
     }
 
-    // @RequestMapping(value="/data/{itemid}", method = RequestMethod.GET)
-    // public @ResponseBody
     // item getitem(@PathVariable("itemid") String itemid) {
-
     // @RequestMapping(value = "/api/orders/{itemid}", method = RequestMethod.GET)
     // @ResponseBody
-    @PostMapping("/api/orders/{articleId}")
-    public String insertProduct(@PathVariable UUID articleId, @RequestBody Map<String, Object> requestBody) {
+    // @PostMapping("/{articleId}")
+    // @RequestMapping(value = "/{articleId}", method = RequestMethod.POST)
+    // public @ResponseBody
+    // public String insertProduct(@PathVariable String articleId,
+    // @RequestBody Map<String, Object> requestBody) {
+    @PostMapping()
+    public String insertProduct(@RequestBody PostBody requestBody) {
+
+        // System.out.println("Inserting new order...");
+        // System.out.println("Request body: " + requestBody);
+        // System.out.println("Article ID: " + articleId);
 
         UUID orderId = null;
 
-        int quantity = (int) requestBody.get("quantity");
+        int quantity = requestBody.getQuantity();
+        UUID articleId = requestBody.getArticleId();
 
+        System.out.println("Article ID: " + articleId);
+
+        // UUID articleUUID = UUID.fromString(articleId);
+
+        // OrderDetails newOrder = new OrderDetails(articleUUID, quantity);
         OrderDetails newOrder = new OrderDetails(articleId, quantity);
 
         orderId = DatabaseConnection.insertNewOrder(newOrder);
@@ -43,6 +79,17 @@ public class Orders {
         System.out.println("OrderID: " + orderId);
         // Your logic to insert a new product with the given id and quantity goes here
         return "Product with id " + articleId + " and quantity " + quantity + " has been inserted";
+
+    }
+
+    @PatchMapping("")
+    public String updateOrder(@RequestBody CalcNeedsBody requestBody) {
+        // Your logic to update the order with the given orderId and requestBody goes
+        // here
+
+        DatabaseConnection.calculateOrderNeeds(requestBody.getOrderId());
+
+        return "Order with id " + requestBody.getOrderId() + " has been updated";
     }
 
 }
