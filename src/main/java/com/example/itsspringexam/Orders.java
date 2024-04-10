@@ -27,7 +27,7 @@ class PostBody {
     }
 }
 
-class CalcNeedsBody {
+class ProcessOrderBody {
     private UUID orderId;
 
     public UUID getOrderId() {
@@ -82,14 +82,19 @@ public class Orders {
 
     }
 
-    @PatchMapping("")
-    public String updateOrder(@RequestBody CalcNeedsBody requestBody) {
-        // Your logic to update the order with the given orderId and requestBody goes
-        // here
+    @PostMapping("/process")
+    public String processOrder(@RequestBody ProcessOrderBody requestBody) {
+        try {
 
-        DatabaseConnection.calculateOrderNeeds(requestBody.getOrderId());
+            UUID orderId = requestBody.getOrderId();
 
-        return "Order with id " + requestBody.getOrderId() + " has been updated";
+            DatabaseConnection.processOrder(orderId);
+
+            return "Order with id " + orderId + " has been processed";
+        } catch (Exception e) {
+            // TODO: handle exception
+            return "Error processing order";
+        }
     }
 
 }

@@ -12,6 +12,27 @@ Content-type: application/json
 
 ---
 
-PATCH http://localhost:8080/api/orders/6DD3DBBF-836E-418B-9AE6-25C4A899D833
+PATCH http://localhost:8080/api/needs
+content-type: application/json
+
+{
+    "orderId": "6DD3DBBF-836E-418B-9AE6-25C4A899D833"
+}
 
 ---
+
+GET http://localhost:8080/api/needs
+content-type: application/json
+
+{
+    "orderId": "6DD3DBBF-836E-418B-9AE6-25C4A899D833"
+}
+
+---
+
+GET http://localhost:8080/api/orders/process
+content-type: application/json
+
+{
+    "orderId": "6DD3DBBF-836E-418B-9AE6-25C4A899D833"
+}

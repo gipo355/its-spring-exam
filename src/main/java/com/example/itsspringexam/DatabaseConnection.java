@@ -5,6 +5,32 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+class OrderNeeds {
+    private UUID articleId;
+    private String articleName;
+    private int quantityNeeded;
+
+    public OrderNeeds(UUID articleId, int quantityNeeded, String articleName) {
+        this.articleId = articleId;
+        this.quantityNeeded = quantityNeeded;
+        this.articleName = articleName;
+    }
+
+    public UUID getArticleId() {
+        return articleId;
+
+    }
+
+    public int getQuantityNeeded() {
+        return quantityNeeded;
+    }
+
+    public String getArticleName() {
+        return articleName;
+    }
+
+}
+
 class Article {
     private UUID id;
     private String name;
@@ -244,13 +270,15 @@ public class DatabaseConnection {
         }
     }
 
-    public static void displayOrderNeeds(UUID orderId) {
+    public static ArrayList<OrderNeeds> displayOrderNeeds(UUID orderId) {
 
         Connection conn = null;
 
         PreparedStatement pstmt = null;
 
         ResultSet rs = null;
+
+        ArrayList<OrderNeeds> orderNeeds = new ArrayList<OrderNeeds>();
 
         try {
             // Register JDBC driver
@@ -284,14 +312,22 @@ public class DatabaseConnection {
 
                 String articleName = rs.getString("Name");
 
+                orderNeeds.add(new OrderNeeds(articleId, quantityNeeded, articleName));
+
                 System.out.println("Article ID: " + articleId + ", Article Name: " + articleName + ", Quantity needed: "
                         + quantityNeeded);
             }
 
+            return orderNeeds;
+
         } catch (SQLException se) {
             se.printStackTrace();
+
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
+
+            return null;
         } finally {
             try {
                 if (rs != null)
