@@ -23,6 +23,8 @@ dependencies {
 	implementation 'com.microsoft.sqlserver:mssql-jdbc:12.6.0.jre11'
 	implementation('org.springframework.boot:spring-boot-starter-web')
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.data:spring-data-jpa:3.2.4'
+	// https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa
 	// compileOnly("org.springframework.boot:spring-boot-devtools")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
